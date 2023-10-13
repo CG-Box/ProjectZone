@@ -5,7 +5,7 @@ using System.IO;
 
 public class FileDataHandler
 {
-    public string currentSceneName = null;
+    public string currentSceneName = "SampleScene";
 
     private string dataDirPath = "";
     private string dataFileName = "";

@@ -5,8 +5,7 @@ public class RotateOrigin : MonoBehaviour
     [SerializeField]
     private Transform rotateCircle;
 
-    [SerializeField]
-    private Transform targetLock;
+    Transform targetLock;
 
     // Update is called once per frame
     void Update()

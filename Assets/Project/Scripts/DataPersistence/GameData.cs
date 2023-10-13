@@ -39,14 +39,14 @@ public class GameData
     public class Globals
     {
         public long lastUpdated;
-        public float healthAmount;
+        public float playerHealth;
 
         public string lastSceneName;
 
         //public List<Item> itemList;
         public Globals()
         {
-            healthAmount = 100;
+            playerHealth = 100;
             //itemList = new List<Item>();
             lastSceneName = "SampleScene";
         }

@@ -22,7 +22,7 @@ public class HealthBehaviour : MonoBehaviour, IDamageable
 
     void Start()
     {
-        HealthToMax();
+        //HealthToMax();
     }
 
     public void TakeDamage(float damageAmount)
@@ -54,6 +54,24 @@ public class HealthBehaviour : MonoBehaviour, IDamageable
         }
     }
 
+
+    public void SetHealt(float newHealth)
+    {
+        float healthBefore = health;
+        if(newHealth > maxHealth)
+        {
+            health = maxHealth;
+        }
+        else
+        {
+            health = newHealth;
+        }
+
+        if(health != healthBefore)
+        {
+            OnHealthChanged?.Invoke(health);
+        }
+    }
     public void HealthToMax()
     {
         health = maxHealth;

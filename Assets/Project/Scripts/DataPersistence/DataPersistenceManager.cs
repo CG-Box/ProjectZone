@@ -70,9 +70,8 @@ public class DataPersistenceManager : MonoBehaviour
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode) 
     {
-        Debug.Log("OnSceneLoaded :"+scene.name);
+        //Debug.Log("OnSceneLoaded :"+scene.name);
         dataHandler.currentSceneName = scene.name;
-        Debug.Log("Loaded scene: "+ scene.name);
 
         this.dataPersistenceObjects = FindAllDataPersistenceObjects();
         LoadGame();
@@ -124,6 +123,12 @@ public class DataPersistenceManager : MonoBehaviour
         
         dataHandler.currentSceneName = firstSceneName;
         gameData.scene.name = firstSceneName;
+
+        //Load default data
+        foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects) 
+        {
+            dataPersistenceObj.LoadData(gameData);
+        }
     }
 
     public void LoadGame()

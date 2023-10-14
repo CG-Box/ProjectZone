@@ -1,40 +1,36 @@
+using UnityEngine;
 using System.Collections.Generic;
 using System;
 
 public class Inventory
 {    
-    private List<Item> itemList;
-    private Action<Item> UseItemAction;
+    List<ItemBase> itemList;
 
     public event EventHandler OnItemListChanged;
 
-    public Inventory(Action<Item> UseItemAction)
+    public Inventory()
     {
-        this.UseItemAction = UseItemAction;
-        itemList = new List<Item>();
+        itemList = new List<ItemBase>();
 
-        /*
-        AddItem(new Item{type = ItemType.Sword, amount = 1});
-        AddItem(new Item{type = ItemType.HealthPotion, amount = 1});
-        AddItem(new Item{type = ItemType.ManaPotion, amount = 1});
-        AddItem(new Item{type = ItemType.Medkit, amount = 1});
-        AddItem(new Item{type = ItemType.Coin, amount = 5});*/
+        //AddItem(new ItemBase{type = ItemType.Medkit, amount = 1});
     }
 
-    public void AddItem(Item newItem)
-    {
-        if(newItem.IsStackale())
+    public void AddItem(ItemBase newItem)
+    {   
+        if(newItem.canStack)
         {   
             bool alreadyExist = false;
-            foreach(Item item in itemList)
+            for (int i = 0; i < itemList.Count; i++)
             {
-                if(item.type == newItem.type)
+                ItemBase currentItem = itemList[i];
+                if(currentItem.type == newItem.type)
                 {
                     alreadyExist = true;
-                    item.amount += newItem.amount;
+                    currentItem.amount += newItem.amount;
+                    itemList[i] = currentItem;
                 }
-
             }
+
             if(!alreadyExist)
             {
                 itemList.Add(newItem);
@@ -45,24 +41,24 @@ public class Inventory
             itemList.Add(newItem);
         }
         OnItemListChanged?.Invoke(this, EventArgs.Empty);
-    }
-    public void RemoveItem(Item delItem)
-    {
-        if(delItem.IsStackale())
-        {   
-            Item itemExist = null;
-            foreach(Item item in itemList)
-            {
-                if(item.type == delItem.type)
-                {
-                    itemExist = item;
-                    item.amount -= delItem.amount;
-                }
 
-            }
-            if(itemExist != null && itemExist.amount <= 0)
+        PrintInventoryToDebug();
+    }
+    public void RemoveItem(ItemBase delItem)
+    {   
+        if(delItem.canStack)
+        {   
+            for (int i = 0; i < itemList.Count; i++)
             {
-                itemList.Remove(itemExist);
+                ItemBase currentItem = itemList[i];
+                if(currentItem.type == delItem.type)
+                {
+                    currentItem.amount -= delItem.amount;
+                    itemList[i] = currentItem;
+                    if(currentItem.amount <= 0)
+                        itemList.Remove(currentItem);
+                    break;
+                }
             }
         }
         else
@@ -70,18 +66,24 @@ public class Inventory
             itemList.Remove(delItem);
         }
         OnItemListChanged?.Invoke(this, EventArgs.Empty);
+
+        PrintInventoryToDebug();
     }
 
-    public void UseItem(Item useItem)
+    public void PrintInventoryToDebug()
     {
-        UseItemAction(useItem);
+        Debug.Log("*** INVENTORY ***");
+        foreach(ItemBase item in itemList)
+        {
+            Debug.Log($"item type: {item.type} amount: {item.amount}");
+        }
     }
     
-    public List<Item> GetItemList()
+    public List<ItemBase> GetItemList()
     {
         return itemList;
     }
-    public void LoadItemList(List<Item> loadItemList)
+    public void LoadItemList(List<ItemBase> loadItemList)
     {
         itemList = loadItemList;
         OnItemListChanged?.Invoke(this, EventArgs.Empty);

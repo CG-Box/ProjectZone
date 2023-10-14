@@ -43,11 +43,11 @@ public class GameData
 
         public string lastSceneName;
 
-        //public List<Item> itemList;
+        public List<ItemBase> itemList;
         public Globals()
         {
             playerHealth = 100;
-            //itemList = new List<Item>();
+            itemList = new List<ItemBase>();
             lastSceneName = "SampleScene";
         }
     }

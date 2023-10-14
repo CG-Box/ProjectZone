@@ -13,7 +13,9 @@ public class StaticEvents
     */
   public class Collecting
   {
-    public static Action<Item> OnItemCollect;
+    public static Action<ItemBase> OnItemCollect;
+    public static Action<ItemBase> OnItemRemove;
+    public static Action<ItemBase> OnItemUse;
   }
 
     /*

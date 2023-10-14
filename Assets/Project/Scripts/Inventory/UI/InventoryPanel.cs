@@ -40,24 +40,18 @@ public class InventoryPanel : MonoBehaviour
     {
         foreach(Transform child in itemsContainer)
         {
-            if(child == itemTemplate) continue;
             Destroy(child.gameObject);
         }
-        int x = 0;
-        int y = 0;
-        foreach(Item item in inventory.GetItemList())
+        
+        foreach(ItemBase item in inventory.GetItemList())
         {
             RectTransform itemSlotRectTransform = Instantiate(itemTemplate, itemsContainer).GetComponent<RectTransform>();
-            itemSlotRectTransform.gameObject.SetActive(true);
+            //itemSlotRectTransform.gameObject.SetActive(true);
+            InventorySlot inventorySlot = itemSlotRectTransform.gameObject.GetComponent<InventorySlot>();
 
-            itemSlotRectTransform.anchoredPosition = new Vector2(x * slotSize, y * slotSize);
-
-            Image slotImage = itemSlotRectTransform.Find("ItemImage").GetComponent<Image>();
-            slotImage.sprite = item.GetSprite();
-
-            TextMeshProUGUI slotText = itemSlotRectTransform.Find("ItemCount").GetComponent<TextMeshProUGUI>();
-
-            Debug.Log($"CHANGE THIS");
+            inventorySlot.SetSlotItem(item);
+            inventorySlot.UpdateSlotVisual();
+            
             /*
             ClickableObject clickObj = itemSlotRectTransform.GetComponent<ClickableObject>();
             clickObj.LeftClickFunction = () => {
@@ -68,29 +62,14 @@ public class InventoryPanel : MonoBehaviour
             };
             clickObj.RightClickFunction = () => {
                 Use(item);
-            };
- 
-            if(item.amount > 1)
-            {
-                slotText.SetText(item.amount.ToString());
-            }
-            else
-            {
-                slotText.SetText("");
-            }
-            
-            x++;
-            if(x > amountInLine)
-            {
-                x = 0;
-                y++;
-            }*/
+            };*/
         }
     }
 
+    /*
     public void Drop(Item item)
     {
-        Item duplicateItem = new Item {type = item.type, amount = item.amount};
+        //Item duplicateItem = new Item {type = item.type, amount = item.amount};
         inventory.RemoveItem(item);
 
         Debug.Log($"CHANGE THIS");
@@ -99,6 +78,6 @@ public class InventoryPanel : MonoBehaviour
     public void Use(Item item)
     {
         inventory.UseItem(item);
-    }
+    }*/
  
 }

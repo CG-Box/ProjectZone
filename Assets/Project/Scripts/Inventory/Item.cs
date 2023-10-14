@@ -1,69 +1,66 @@
 using UnityEngine;
 using System;
 
-[Serializable]
-public class Item
+
+[RequireComponent(typeof(SpriteRenderer))]
+public class Item : MonoBehaviour
 {
-    public ItemType type;
-    public int amount;
-    public bool canStack = false;
-    public Sprite sprite;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
 
-    public void CreateItem(ItemBase itemBase)
+    [Header("Require ItemData_SO")]
+
+    [SerializeField]
+    private ItemData_SO itemToGenerate;
+    ItemBase itemBase;
+    public ItemBase Data
     {
-        this.type = itemBase.type;
-        this.amount = itemBase.amount;
-        this.canStack = itemBase.canStack;
-        this.sprite = itemBase.sprite;
+        get { return itemBase; }
     }
 
+    //public Action BeforeDestroyFunction;
 
-    //CHANGE
-    public Sprite GetSprite()
+    void Awake()
     {
-        return sprite;
-
-        //get sprite from database by type
-        /*switch(type)
-        {
-            default:
-            case ItemType.HealthPotion: return ItemAssets.Instance.healthPotionSprite;
-            case ItemType.ManaPotion:   return ItemAssets.Instance.manaPotionSprite;
-            case ItemType.Medkit:       return ItemAssets.Instance.medkitSprite;
-            case ItemType.Sword:        return ItemAssets.Instance.swordSprite;
-            case ItemType.Coin:         return ItemAssets.Instance.coinSprite;
-        }*/
+        //spriteRenderer = GetComponent<SpriteRenderer>();
+        GenerateItemByItemData_SO(itemToGenerate);
+        UpdateItemVisual();
     }
 
-
-    //CHANGE
-    public bool IsStackale()
+    [ContextMenu("GenerateItem")]
+    public void GenerateItemByItemData_SO()
     {
-        return canStack;
-        
-        /*
-        //get sprite from database by type
-        switch(type)
-        {
-            default:
-            case ItemType.HealthPotion: return true;
-            case ItemType.ManaPotion:   return true;
-            case ItemType.Medkit:       return false;
-            case ItemType.Sword:        return false;
-            case ItemType.Coin:         return true;
-        }*/
+        GenerateItemByItemData_SO(itemToGenerate);
+    }
+    public void GenerateItemByItemData_SO(ItemData_SO itemData_SO)
+    {
+       if(itemData_SO)
+       {
+            SetItem(itemData_SO);
+            UpdateItemVisual();
+       }/*
+       else
+       {
+            Debug.LogError("Can't generate item by empty ItemData_SO");
+       }*/
     }
 
-    public static Item Clone(Item originalItem)
+    public void SetItem(ItemBase itemBase)
     {
-        Item copyItem = new Item();
-        copyItem.type = originalItem.type;
-        copyItem.amount = originalItem.amount;
-        copyItem.canStack = originalItem.canStack;
-        return copyItem;
+        this.itemBase = itemBase;
     }
-    public Item Clone()
+    public void SetItem(ItemData_SO itemData_SO)
     {
-        return Clone(this);
+        this.itemBase = itemData_SO.Data;
+    }
+    public void UpdateItemVisual()
+    {
+        spriteRenderer.sprite = itemBase.sprite;
+    }
+
+    public void DestroySelf()
+    {
+        //BeforeDestroyFunction?.Invoke();
+        Destroy(gameObject);
     }
 }

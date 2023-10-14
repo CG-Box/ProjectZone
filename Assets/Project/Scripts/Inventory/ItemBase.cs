@@ -1,7 +1,10 @@
 using UnityEngine;
+using System;
+
+[Serializable]
 public struct ItemBase
 {
-    public readonly ItemType type;
+    public ItemType type;
     public readonly Sprite sprite;
     public readonly bool canStack;
     public int amount;

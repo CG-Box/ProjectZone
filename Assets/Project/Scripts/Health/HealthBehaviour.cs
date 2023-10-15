@@ -9,7 +9,6 @@ public class HealthBehaviour : MonoBehaviour, IDamageable
     private float maxHealth = 100;
 
     public event Action<float> OnHealthChanged;
-    public event Action<float> OnMaxHealthChanged;
 
     public float Health
     {
@@ -23,6 +22,15 @@ public class HealthBehaviour : MonoBehaviour, IDamageable
     void Start()
     {
         //HealthToMax();
+    }
+
+    void OnEnable()
+    {
+        StaticEvents.PlayerHealth.OnRestoreHealth += RecoverDamage;
+    }  
+    void OnDisable()
+    {
+        StaticEvents.PlayerHealth.OnRestoreHealth -= RecoverDamage;
     }
 
     public void TakeDamage(float damageAmount)
@@ -39,10 +47,11 @@ public class HealthBehaviour : MonoBehaviour, IDamageable
             OnHealthChanged?.Invoke(health);
         }
     }
-    public void RecoverDamage(float reoverAmount)
+
+    public void RecoverDamage(float recoverAmount)
     {
         float healthBefore = health;
-        health += reoverAmount;
+        health += recoverAmount;
         if(health > maxHealth)
         {
             health = maxHealth;
@@ -52,6 +61,11 @@ public class HealthBehaviour : MonoBehaviour, IDamageable
         {
             OnHealthChanged?.Invoke(health);
         }
+    }
+    public void RecoverDamage(float recoverAmount, GameObject targetObject)
+    {
+        if(gameObject == targetObject)
+            RecoverDamage(recoverAmount);
     }
 
 

@@ -26,30 +26,49 @@ public class InventoryBehaviour : MonoBehaviour,IDataPersistence
     {
         StaticEvents.Collecting.OnItemUse += UseItem;
         StaticEvents.Collecting.OnItemRemove += RemoveItem;
+        StaticEvents.Spawning.OnSpawnItem += DropItem;
     }  
     void OnDisable()
     {
         StaticEvents.Collecting.OnItemUse -= UseItem;
+        StaticEvents.Collecting.OnItemRemove -= RemoveItem;
+        StaticEvents.Spawning.OnSpawnItem -= DropItem;
     }
 
     public void UseItem(ItemBase item)
     {
-        Debug.Log($"item was used {item.type}");
-        /*
         switch(item.type)
         {
             default:
-            case ItemType.Medkit:
+            case ItemType.Ammo:
                 inventory.RemoveItem(item);
-                Debug.Log("Used: Medkit");
+                if(inventory.DoesNotContain(item))
+                    StaticEvents.Collecting.OnOutOfAmmo?.Invoke();
                 break;
-        }*/
+            case ItemType.Medkit:
+                float medkitHealth = 50f;
+                StaticEvents.PlayerHealth.OnRestoreHealth?.Invoke(medkitHealth, this.gameObject);
+                inventory.RemoveItem(new ItemBase(ItemType.Medkit,null,true,1));
+                break;
+        }
+    }
+    public void UseItem(ItemBase item, GameObject targetObject)
+    {   
+        if(gameObject == targetObject)
+            UseItem(item);
     }
     public void RemoveItem(ItemBase item)
     {
-        inventory.RemoveItem(item);
+         inventory.RemoveItem(item);
+            if(inventory.DoesNotContain(item))
+                StaticEvents.Collecting.OnOutOfAmmo?.Invoke();
         DropItem(item, transform.position);
-        inventory.PrintInventoryToDebug();
+        //inventory.PrintInventoryToDebug();
+    }
+    public void RemoveItem(ItemBase item, GameObject targetObject)
+    {
+        if(gameObject == targetObject)
+            RemoveItem(item);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -92,7 +111,6 @@ public class InventoryBehaviour : MonoBehaviour,IDataPersistence
         List<ItemBase> inventoryList = new List<ItemBase>();
         foreach (ItemBase item in data.globals.itemList)
         {
-            Debug.Log(item.type);
             ItemBase inventoryItem = itemsDatabase.GetItemData(item.type);
             inventoryItem.amount = item.amount;
             inventoryList.Add(inventoryItem);

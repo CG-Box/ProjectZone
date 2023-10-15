@@ -3,19 +3,23 @@ using UnityEngine;
 
 public class StaticEvents
 { 
-    /*
-    public class Health
-    {
-        public static Action<float> OnHealthChanged;
-        public static Action<float> OnHealthDecreased;
-        public static Action<float> OnHealthIncreased;
-    }
-    */
+    
+  public class PlayerHealth
+  {
+    //public static Action<float> OnHealthChanged;
+    //public static Action<float> OnHealthDecreased;
+    //public static Action<float> OnHealthIncreased;
+
+    public static Action<float, GameObject> OnRestoreHealth;
+  }
+    
   public class Collecting
   {
     public static Action<ItemBase> OnItemCollect;
-    public static Action<ItemBase> OnItemRemove;
-    public static Action<ItemBase> OnItemUse;
+    public static Action<ItemBase, GameObject> OnItemRemove;
+    public static Action<ItemBase, GameObject> OnItemUse;
+    public static Action OnOutOfAmmo;
+    //public static Action OnGetAmmo;
   }
 
     /*
@@ -34,6 +38,7 @@ public class StaticEvents
   public class Spawning
   {
     public static Action<Transform> OnShootBullet;
+    public static Func<ItemBase, Vector3, Item> OnSpawnItem;
   }
 
   public class Controls

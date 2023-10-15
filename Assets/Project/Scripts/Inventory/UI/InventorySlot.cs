@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,19 +23,26 @@ public class InventorySlot : MonoBehaviour
 
     ItemBase itemBase;
     
-    //public event EventHandler OnUse;
-    //public event EventHandler OnRemove;
+    public event EventHandler<ItemSlotEventArgs> OnUseSlotItem;
+    public event EventHandler<ItemSlotEventArgs> OnRemoveSlotItem;
 
 
-    void Awake()
+    void OnEnable()
     {
-        //EventSystem.current.SetSelectedGameObject(gameObject);
-
         removeButton.onClick.AddListener(OnRemoveClick);
         useButton.onClick.AddListener(OnUseClick);
-        //OnItemListChanged?.Invoke(this, EventArgs.Empty);
     }
+    void OnDisable()
+    {
+        removeButton.onClick.RemoveListener(OnRemoveClick);
+        useButton.onClick.RemoveListener(OnUseClick);
+    }
+
     /*
+    void Awake()
+    {
+        EventSystem.current.SetSelectedGameObject(gameObject);
+    }
     public void OnDeselect(BaseEventData eventData)
     {
         Debug.Log("Mouse was clicked outside");
@@ -42,11 +50,11 @@ public class InventorySlot : MonoBehaviour
 
     void OnRemoveClick()
     {
-		StaticEvents.Collecting.OnItemRemove?.Invoke(itemBase);
+        OnRemoveSlotItem?.Invoke(this, new ItemSlotEventArgs(this.itemBase));
 	}
     void OnUseClick()
     {
-		StaticEvents.Collecting.OnItemUse?.Invoke(itemBase);
+        OnUseSlotItem?.Invoke(this, new ItemSlotEventArgs(this.itemBase));
 	}
 
     public void HideControlButtons()
@@ -70,5 +78,14 @@ public class InventorySlot : MonoBehaviour
         {
             slotStackText.SetText("");
         }
+    }
+}
+
+public class ItemSlotEventArgs : EventArgs
+{
+    public ItemBase itemBase;
+    public ItemSlotEventArgs(ItemBase itemBase)
+    {
+        this.itemBase = itemBase;
     }
 }

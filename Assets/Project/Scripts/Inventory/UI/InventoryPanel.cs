@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 using TMPro;
 
 public class InventoryPanel : MonoBehaviour
@@ -10,12 +11,13 @@ public class InventoryPanel : MonoBehaviour
     [SerializeField]private Transform itemsContainer;
     [SerializeField]private Transform itemTemplate;
 
-    [SerializeField]private float slotSize = 50f;
-    [SerializeField]private int amountInLine = 7;
-
     private InventoryBehaviour inventoryBehaviour;
 
     [SerializeField]private ItemsDB_SO itemsDatabase;
+
+    const int slotsMaxAmount = 21;
+
+    List<InventorySlot> slotsList = new List<InventorySlot>( new InventorySlot[slotsMaxAmount]);
 
     public void SetInventoryBehaviour(InventoryBehaviour inventoryBehaviour)
     {
@@ -40,6 +42,8 @@ public class InventoryPanel : MonoBehaviour
     {
         foreach(Transform child in itemsContainer)
         {
+            InventorySlot inventorySlot = child.gameObject.GetComponent<InventorySlot>();
+            RemoveSlotListeners(inventorySlot);
             Destroy(child.gameObject);
         }
         
@@ -48,36 +52,32 @@ public class InventoryPanel : MonoBehaviour
             RectTransform itemSlotRectTransform = Instantiate(itemTemplate, itemsContainer).GetComponent<RectTransform>();
             //itemSlotRectTransform.gameObject.SetActive(true);
             InventorySlot inventorySlot = itemSlotRectTransform.gameObject.GetComponent<InventorySlot>();
-
             inventorySlot.SetSlotItem(item);
             inventorySlot.UpdateSlotVisual();
-            
-            /*
-            ClickableObject clickObj = itemSlotRectTransform.GetComponent<ClickableObject>();
-            clickObj.LeftClickFunction = () => {
-                //Debug.Log("Left click item: "+item.type.ToString());
-            };
-            clickObj.MiddleClickFunction = () => {
-                Drop(item);
-            };
-            clickObj.RightClickFunction = () => {
-                Use(item);
-            };*/
+            AddSlotListeners(inventorySlot);
         }
     }
 
-    /*
-    public void Drop(Item item)
+    private void AddSlotListeners(InventorySlot inventorySlot)
     {
-        //Item duplicateItem = new Item {type = item.type, amount = item.amount};
-        inventory.RemoveItem(item);
 
-        Debug.Log($"CHANGE THIS");
-        //InventoryCollectable.DropItem(duplicateItem, inventoryBehaviour.gameObject.transform.position);
+        inventorySlot.OnUseSlotItem += InventoryPanel_OnUseSlotItem;
+        inventorySlot.OnRemoveSlotItem += InventoryPanel_OnRemoveSlotItem;
     }
-    public void Use(Item item)
+    private void RemoveSlotListeners(InventorySlot inventorySlot)
     {
-        inventory.UseItem(item);
-    }*/
- 
+
+        inventorySlot.OnUseSlotItem -= InventoryPanel_OnUseSlotItem;
+        inventorySlot.OnRemoveSlotItem -= InventoryPanel_OnRemoveSlotItem;
+    }
+
+    private void InventoryPanel_OnUseSlotItem(object sender, ItemSlotEventArgs eventArgs)
+    {
+        StaticEvents.Collecting.OnItemUse?.Invoke(eventArgs.itemBase, inventoryBehaviour.gameObject);
+    }
+    private void InventoryPanel_OnRemoveSlotItem(object sender, ItemSlotEventArgs eventArgs)
+    {
+        StaticEvents.Collecting.OnItemRemove?.Invoke(eventArgs.itemBase, inventoryBehaviour.gameObject);
+    }
+
 }

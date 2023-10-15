@@ -14,12 +14,10 @@ public class HealthBar : MonoBehaviour
     void OnEnable()
     {
         healthBehaviour.OnHealthChanged += SetSliderValue;
-        healthBehaviour.OnMaxHealthChanged += SetSliderMaxValue;
     }
     void OnDisable()
     {
         healthBehaviour.OnHealthChanged -= SetSliderValue;
-        healthBehaviour.OnMaxHealthChanged -= SetSliderMaxValue;
     }
 
     public void SetSliderValue(float health)

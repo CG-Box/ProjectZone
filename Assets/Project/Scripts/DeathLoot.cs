@@ -24,7 +24,7 @@ public class DeathLoot : MonoBehaviour
         {
             foreach (ItemData_SO item in itemsToSpawn)
             {
-                Debug.Log($"{item.Data.type} ");
+                StaticEvents.Spawning.OnSpawnItem?.Invoke(item.Data, transform.position);
             }
         }
     }

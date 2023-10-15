@@ -42,7 +42,7 @@ public class Inventory
         }
         OnItemListChanged?.Invoke(this, EventArgs.Empty);
 
-        PrintInventoryToDebug();
+        //PrintInventoryToDebug();
     }
     public void RemoveItem(ItemBase delItem)
     {   
@@ -56,7 +56,9 @@ public class Inventory
                     currentItem.amount -= delItem.amount;
                     itemList[i] = currentItem;
                     if(currentItem.amount <= 0)
+                    {
                         itemList.Remove(currentItem);
+                    }
                     break;
                 }
             }
@@ -67,7 +69,21 @@ public class Inventory
         }
         OnItemListChanged?.Invoke(this, EventArgs.Empty);
 
-        PrintInventoryToDebug();
+        //PrintInventoryToDebug();
+    }
+
+    public bool ContainsItem(ItemBase checkItem)
+    {
+        foreach(ItemBase item in itemList)
+        {
+            if(item.type == checkItem.type)
+                return true;
+        }
+        return false;
+    }
+    public bool DoesNotContain(ItemBase checkItem)
+    {
+        return !ContainsItem(checkItem);
     }
 
     public void PrintInventoryToDebug()

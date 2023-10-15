@@ -1,11 +1,10 @@
-using UnityEngine;
-
 public class EnemyController: BaseController
 {
 	public override void Die()
 	{
 		base.Die();
-        StaticEvents.Combat.OnEnemyDeath?.Invoke(this);
+        StaticEvents.Combat.OnEnemyDeath?.Invoke(this.gameObject);
+		gameObject.SetActive(false);
 	}
 	public override void Revive()
 	{
@@ -15,16 +14,9 @@ public class EnemyController: BaseController
     void OnEnable()
 	{
         healthBehaviour.OnHealthChanged += CheckForDeath;
-		StaticEvents.Combat.OnPlayerDeath += HappyPlayer;
 	}
 	void OnDisable()
 	{
         healthBehaviour.OnHealthChanged -= CheckForDeath;
-		StaticEvents.Combat.OnPlayerDeath -= HappyPlayer;
-	}
-
-    void HappyPlayer(string str)
-	{
-		Debug.Log($"player : {str} died");
 	}
 }

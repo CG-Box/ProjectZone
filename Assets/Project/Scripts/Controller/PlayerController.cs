@@ -5,7 +5,8 @@ public class PlayerController: BaseController
 	public override void Die()
 	{
 		base.Die();
-		StaticEvents.Combat.OnPlayerDeath?.Invoke(gameObject.name);
+		StaticEvents.Combat.OnPlayerDeath?.Invoke();
+		gameObject.SetActive(false);
 	}
 	public override void Revive()
 	{
@@ -23,8 +24,8 @@ public class PlayerController: BaseController
 		StaticEvents.Combat.OnEnemyDeath -= HappyPlayer;
 	}
 
-	void HappyPlayer(EnemyController enemyController)
+	void HappyPlayer(GameObject enemyGameObject)
 	{
-		Debug.Log($"enemy : {enemyController.gameObject.name} died");
+		Debug.Log($"enemy : {enemyGameObject.name} died");
 	}
 }

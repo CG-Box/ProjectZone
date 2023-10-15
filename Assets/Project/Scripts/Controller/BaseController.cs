@@ -1,6 +1,7 @@
-using System;
 using UnityEngine;
 
+[RequireComponent(typeof(MoveVelocity))]
+[RequireComponent(typeof(HealthBehaviour))]
 public class BaseController: MonoBehaviour
 {
 	protected MoveVelocity moveVelocity;

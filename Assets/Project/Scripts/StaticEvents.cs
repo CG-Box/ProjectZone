@@ -19,20 +19,12 @@ public class StaticEvents
     public static Action<ItemBase, GameObject> OnItemRemove;
     public static Action<ItemBase, GameObject> OnItemUse;
     public static Action OnOutOfAmmo;
-    //public static Action OnGetAmmo;
   }
-
-    /*
-  public class Quest
-  {  
-    //public static Action<Quest> OnQuestComplete;
-  }
-  */
 
   public class Combat
   {
-    public static Action<EnemyController> OnEnemyDeath;
-    public static Action<string> OnPlayerDeath;
+    public static Action<GameObject> OnEnemyDeath;
+    public static Action OnPlayerDeath;
   }
 
   public class Spawning
@@ -68,9 +60,3 @@ public class StaticEvents
   }
   */
 }
-
-// use example
-// StaticEvents.Collecting.OnItemCollect += FunctionName; //register event
-// StaticEvents.Collecting.OnItemCollect -= FunctionName; //unregister event
-// StaticEvents.Collecting.OnItemCollect?.Invoke(new Item()); //call event
-// StaticEvents.Ui.OnButtonPressed?.Invoke(this, new ButtonEventArgs(32));

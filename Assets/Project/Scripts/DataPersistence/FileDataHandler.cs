@@ -31,6 +31,7 @@ public class FileDataHandler
 
         // use Path.Combine to account for different OS's having different path separators
         string fullPath = Path.Combine(dataDirPath, profileId, dataFileName);
+        //string relPath = Application.persistentDataPath + "/Saves/"+dataFileName;
         GameData loadedData = null;
         if (File.Exists(fullPath)) 
         {

@@ -48,6 +48,8 @@ public class GameData
         {
             playerHealth = 100;
             itemList = new List<ItemBase>();
+            //Add items for new game
+            itemList.Add(new ItemBase(ItemType.Ammo,null,true,17));
             lastSceneName = "SampleScene";
         }
     }

@@ -23,6 +23,13 @@ public class Bullet : MonoBehaviour, IDamager
 
     TrailRenderer trailRenderer;
 
+    bool sleepInPool = false;
+
+    public void SetPoolSleepFlag(bool sleepInPool)
+    {
+        this.sleepInPool = sleepInPool;
+    }
+
     void Awake()
     {
         rb2D = GetComponent<Rigidbody2D>();
@@ -85,7 +92,7 @@ public class Bullet : MonoBehaviour, IDamager
 
         if(bulletsPool != null)
         {
-            bulletsPool.Release(this.gameObject);
+            if(!sleepInPool) bulletsPool.Release(this.gameObject);
         }
         else
         {

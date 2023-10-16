@@ -1,10 +1,13 @@
 public class EnemyController: BaseController
 {
+	public bool ControlledByPool = false;
 	public override void Die()
 	{
 		base.Die();
         StaticEvents.Combat.OnEnemyDeath?.Invoke(this.gameObject);
-		gameObject.SetActive(false);
+
+		if(!ControlledByPool)
+			gameObject.SetActive(false);
 	}
 	public override void Revive()
 	{

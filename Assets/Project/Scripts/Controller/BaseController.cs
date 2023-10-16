@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(MoveVelocity))]
@@ -7,6 +8,8 @@ public class BaseController: MonoBehaviour
 	protected MoveVelocity moveVelocity;
 
     protected HealthBehaviour healthBehaviour;
+
+	public event Action<BaseController> OnDie;
 
 	protected bool isDead = false;
 	public bool IsDead
@@ -29,6 +32,7 @@ public class BaseController: MonoBehaviour
 	{
 		isDead = true;
 		moveVelocity.DisableMoving();
+		OnDie?.Invoke(this);
 	}
 	public virtual void Revive()
 	{

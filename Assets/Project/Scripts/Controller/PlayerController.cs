@@ -16,16 +16,16 @@ public class PlayerController: BaseController
 	void OnEnable()
 	{
 		healthBehaviour.OnHealthChanged += CheckForDeath;
-		StaticEvents.Combat.OnEnemyDeath += HappyPlayer;
+		StaticEvents.Combat.OnEnemyDeath += ShowEnemyName;
 	}
 	void OnDisable()
 	{
 		healthBehaviour.OnHealthChanged -= CheckForDeath;
-		StaticEvents.Combat.OnEnemyDeath -= HappyPlayer;
+		StaticEvents.Combat.OnEnemyDeath -= ShowEnemyName;
 	}
 
-	void HappyPlayer(GameObject enemyGameObject)
+	void ShowEnemyName(GameObject enemyGameObject)
 	{
-		Debug.Log($"enemy : {enemyGameObject.name} died");
+		//Debug.Log($"enemy : {enemyGameObject.name} died");
 	}
 }

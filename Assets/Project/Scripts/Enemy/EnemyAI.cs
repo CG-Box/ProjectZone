@@ -9,7 +9,7 @@ public class EnemyAI : MonoBehaviour
 
     NavMeshAgent navAgent;
 
-    public LayerMask  whatIsGround, whatIsPlayer;
+    public LayerMask whatIsPlayer;
 
     //Patrolling
     public Transform walkPoint;
@@ -28,7 +28,10 @@ public class EnemyAI : MonoBehaviour
 
     void Awake()
     {
-        //targetTransform = GameObject.Find("Player").transform;
+        if(!targetTransform)
+        {
+            targetTransform = GameObject.Find("Player").transform;
+        }
 
         navAgent = GetComponent<NavMeshAgent>();
         navAgent.updateRotation = false;
@@ -63,23 +66,23 @@ public class EnemyAI : MonoBehaviour
         playerInSightRange = Physics2D.OverlapCircle(transform.position, sightRange, whatIsPlayer) != null;
         playerInAttackRange = Physics2D.OverlapCircle(transform.position, attackRange, whatIsPlayer) != null;
 
-        if(!playerInSightRange && !playerInAttackRange) Patrolling();
+        //if(!playerInSightRange && !playerInAttackRange) Patrolling();
         if(playerInSightRange && !playerInAttackRange) ChaseTarget();
         if(playerInSightRange && playerInAttackRange) TryAttackTarget();
     }
 
 
-    void DisableMovements(GameObject targetObject)
+    public void DisableMovements(GameObject targetObject)
 	{
         if(gameObject == targetObject)
             DisableMovements();
 	}
-    void DisableMovements()
+    public void DisableMovements()
     {
         navAgent.SetDestination(transform.position);
         disableMovements = true;
     }
-    void EnableMovements() => disableMovements = false;
+    public void EnableMovements() => disableMovements = false;
 
     void Patrolling()
     {
@@ -101,7 +104,6 @@ public class EnemyAI : MonoBehaviour
 
         walkPoint.position = new Vector3(transform.position.x + randomX, transform.position.y + randomY, transform.position.z);
 
-        //if(Physics2D.Raycast(walkPoint.position, -Vector2.up, 2f, whatIsGround)) walkPointSet = true;
         walkPointSet = true;
     }
     void ChaseTarget()
@@ -126,7 +128,6 @@ public class EnemyAI : MonoBehaviour
 
         if (targetCollider2D.gameObject.TryGetComponent<IDamageable>(out IDamageable damageable))
         {
-            Debug.Log(targetCollider2D);
             damageable.TakeDamage(25f);
         }
     }
@@ -135,7 +136,16 @@ public class EnemyAI : MonoBehaviour
         alreadyAttacked = false;
     }
 
+
+    void OnDrawGizmos()
+    {
+        DrawSightGizmos();
+    }
     void OnDrawGizmosSelected()
+    {
+        //DrawSightGizmos();
+    }
+    void DrawSightGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);

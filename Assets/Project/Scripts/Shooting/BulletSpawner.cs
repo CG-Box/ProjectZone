@@ -10,8 +10,8 @@ public class BulletSpawner : MonoBehaviour
 
     Transform spawnPosition;
 
-    public int ActiveCount;
-    public int DisabledCount;
+    //public int ActivePoolCount;
+    //public int DisabledPoolCount;
 
     void OnEnable()
     {
@@ -29,10 +29,12 @@ public class BulletSpawner : MonoBehaviour
 
     private void OnTakeBulletFromPool(GameObject bulletObject)
     {
+        bulletObject.GetComponent<Bullet>().SetPoolSleepFlag(false);
         bulletObject.SetActive(true);
     }
     private void OnReturnBulletToPool(GameObject bulletObject)
     {
+        bulletObject.GetComponent<Bullet>().SetPoolSleepFlag(true);
         bulletObject.SetActive(false);
     }
 
@@ -52,18 +54,7 @@ public class BulletSpawner : MonoBehaviour
         bullet.transform.rotation = spawnPosition.rotation;
         bullet.GetComponent<Bullet>().MoveForward();
 
-        DisabledCount = bulletsPool.CountInactive;
-        ActiveCount = bulletsPool.CountActive;
+        //DisabledPoolCount; = bulletsPool.CountInactive;
+        //ActivePoolCount; = bulletsPool.CountActive;
     }
-
-    /*
-    void OnEnable()
-    {
-        InvokeRepeating(nameof(SpawnBullet), 0, 1);
-    }
-    void OnDisable()
-    {
-        CancelInvoke(nameof(SpawnBullet));
-    }
-    */
 }

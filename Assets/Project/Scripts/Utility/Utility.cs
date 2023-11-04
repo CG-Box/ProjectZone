@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using System.Reflection;
 
 namespace NewUtility{
     public static class Utility
@@ -20,6 +22,20 @@ namespace NewUtility{
 
                 float angle = Mathf.Atan2(targ.y, targ.x) * Mathf.Rad2Deg;
                 rollingTransform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));    
+        }
+
+        /// <summary>
+        /// Этот метод копирует объект (значение полей объекта)
+        /// </summary>
+        /// <param name="baseObject">Объект, с которого копируются поля</param>
+        /// <param name="copyObject">Объект, куда копируется поля базового объекта</param>
+        public static void CopyValues<T>(T baseObject, T copyObject)
+        {
+            Type type = baseObject.GetType();
+            foreach(FieldInfo field in type.GetFields())
+            {
+                field.SetValue(copyObject, field.GetValue(baseObject));
+            }
         }
     }
 }
